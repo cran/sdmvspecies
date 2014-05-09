@@ -14,8 +14,6 @@ set.seed(0)
 ###################################################
 # load the sdmvspecies library
 library("sdmvspecies")
-# load parallel library for use mutilcore CPU
-library("parallel")
 # find package's location
 package.dir <- system.file(package="sdmvspecies")
 # let see where is our sdmvspecies is installed in
@@ -246,8 +244,6 @@ plot(species.raster)
 ###################################################
 # load the sdmvspecies library
 library("sdmvspecies")
-# load parrllel to use mutilcore CPU
-library("parallel")
 # find package's location
 package.dir <- system.file(package="sdmvspecies")
 # let see where is our sdmvspecies is installed in
@@ -272,8 +268,6 @@ plot(species.raster)
 ###################################################
 # load the sdmvspecies library
 library("sdmvspecies")
-# load parrllel to use mutilcore CPU
-#library("parallel")
 # find package's location
 package.dir <- system.file(package="sdmvspecies")
 # let see where is our sdmvspecies is installed in
@@ -297,5 +291,32 @@ plot(species.raster)
 species.distribution.raster <- species.raster > 0.2
 # plot map
 plot(species.distribution.raster)
+
+
+###################################################
+### code chunk number 12: artificial_bell_response_method
+###################################################
+# load the sdmvspecies library
+library("sdmvspecies")
+# find package's location
+package.dir <- system.file(package="sdmvspecies")
+# let see where is our sdmvspecies is installed in
+package.dir
+# find env dir under the package's location
+env.dir <- paste(package.dir, "/external/env/", sep="")
+# let see env dir
+env.dir
+# get the environment raster file
+file.name <- files <- c("bio1.bil", "bio11.bil")
+files <- paste(env.dir, file.name, sep="")
+# make raster stack
+env.stack <- stack(files)
+# config
+config <- list(c("bio1", "1", 0, 100), c("bio11", "2", -100, NULL))
+
+# run pick mean
+species.raster <- nicheLimitation(env.stack, config)
+# plot map
+plot(species.raster)
 
 

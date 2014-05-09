@@ -30,7 +30,7 @@ You can use serive methods to create virtual species, all depends on you.
 }
 
 \author{
-Xiaoquan Kong
+Xiaoquan Kong, Renyuan Duan, Minyi Huang
 
 Maintainer: Howl Anderson <u1mail2me@gmail.com>
 }

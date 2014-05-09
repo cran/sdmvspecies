@@ -11,11 +11,13 @@ use pick mean method to create virtual species.
 }
 
 \usage{
-pickMean(env.stack)
+pickMean(env.stack, subset=NULL, stack=FALSE)
 }
  
 \arguments{
   \item{env.stack}{A RasterStack object}
+  \item{subset}{string vector, New in version 0.2. using a subset of env.stack to create vritual speices. NULL means using all env.stack}
+  \item{stack}{logical, New in version 0.2. if you want return a RasterStack object rather than combine them together?}
 }
 
 \value{

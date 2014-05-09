@@ -67,8 +67,6 @@ Let's do a simple example:
 <<niche_Synthsis_Method,echo=TRUE,fig=TRUE>>=
 # load the sdmvspecies library
 library("sdmvspecies")
-# load parallel library for use mutilcore CPU
-library("parallel")
 # find package's location
 package.dir <- system.file(package="sdmvspecies")
 # let see where is our sdmvspecies is installed in
@@ -316,8 +314,6 @@ occurence at this variables level. The cells fall in all of variables' central q
 <<pick_median_method,echo=TRUE,fig=TRUE>>=
 # load the sdmvspecies library
 library("sdmvspecies")
-# load parrllel to use mutilcore CPU
-library("parallel")
 # find package's location
 package.dir <- system.file(package="sdmvspecies")
 # let see where is our sdmvspecies is installed in
@@ -339,12 +335,10 @@ plot(species.raster)
 
 \section*{Artificial Bell-shaped response method}
 This method is first development by \citet{varela_environmental_2014}.
-User need to specfic the mean and starnard devation of normal curves (bell-shaped) for each variable. The species' overall climatic suitability was defined as the multiplication of each variables's suitability. Then User choose a threshold to make distribution map. 
+User need to specfic the mean and standard devation of normal curves (bell-shaped) for each variable. The species' overall climatic suitability was defined as the multiplication of each variables's suitability. Then User choose a threshold to make distribution map. 
 <<artificial_bell_response_method,echo=TRUE,fig=TRUE>>=
 # load the sdmvspecies library
 library("sdmvspecies")
-# load parrllel to use mutilcore CPU
-#library("parallel")
 # find package's location
 package.dir <- system.file(package="sdmvspecies")
 # let see where is our sdmvspecies is installed in
@@ -369,6 +363,37 @@ species.distribution.raster <- species.raster > 0.2
 # plot map
 plot(species.distribution.raster)
 @
+
+The configure is a list of variable item. Each variable item contains layer name, mean and standard devation successively.
+
+\section*{Niche limitation method}
+This method limit the of range of environment that virtual species living. Remove the points that virtual species cannot tolerance.
+
+<<artificial_bell_response_method,echo=TRUE,fig=TRUE>>=
+# load the sdmvspecies library
+library("sdmvspecies")
+# find package's location
+package.dir <- system.file(package="sdmvspecies")
+# let see where is our sdmvspecies is installed in
+package.dir
+# find env dir under the package's location
+env.dir <- paste(package.dir, "/external/env/", sep="")
+# let see env dir
+env.dir
+# get the environment raster file
+file.name <- files <- c("bio1.bil", "bio11.bil")
+files <- paste(env.dir, file.name, sep="")
+# make raster stack
+env.stack <- stack(files)
+# config
+config <- list(c("bio1", "1", 0, 100), c("bio11", "2", -100, NULL))
+
+# run pick mean
+species.raster <- nicheLimitation(env.stack, config)
+# plot map
+plot(species.raster)
+@
+
 \bibliographystyle{plainnat}
 \part{References}
 \bibliography{bibliography}

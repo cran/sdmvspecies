@@ -1,17 +1,17 @@
-\name{nicheSynthese}
+\name{nicheLimitation}
 
-\alias{nicheSynthese}
+\alias{nicheLimitation}
 
 \title{
-niche synthese method
+niche limitation method
 }
 
 \description{ 
-use niche synthese method to create virtual species.
+use niche limitation method to create virtual species.
 }
 
 \usage{
-nicheSynthese(env.stack, config, stack=FALSE)
+nicheLimitation(env.stack, config, stack=FALSE)
 }
  
 \arguments{
@@ -49,33 +49,11 @@ env.stack <- stack(env.files)
 # let see the env.stack var
 env.stack
 # here let's configure the environment response function and weight
-config <- list(
-    c("bio1","1",2), 
-    c("bio14", "2", 2), 
-    c("bio5", "3", 1), 
-    c("bio11", "4", 2), 
-    c("bio16", "5", 1)
-    )
-# call the niche synthsis method
-species.raster <- nicheSynthese(env.stack, config)
-# let see the result raster,
-# you should noticed that it's continue value map not distributin map
-species.raster
+config <- list(c("bio1", "1", 0, 100), c("bio11", "2", -100, NULL))
 
-# write the map to file, so you can use it latter in GIS software
-# or further analysis.
-# 
-#writeRaster(species.raster, "synthese.img", "HFA", overwrite=TRUE)
-
-# to make binary distribution map, you should chosee a threshold to make map
-# see the map then to decide the threshold to binary
+species.raster <- nicheLimitation(env.stack, config)
+# plot
 plot(species.raster)
-# choice threshold, here we choice 4
-threshold <- 14
-# make binary map
-distribution.map <- species.raster > threshold
-# plot the map out
-plot(distribution.map)
 }
 
-\keyword{niche synthese method}
+\keyword{niche limitation method}

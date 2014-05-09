@@ -11,11 +11,13 @@ use pick median method to create virtual species.
 }
 
 \usage{
-pickMedian(env.stack)
+pickMedian(env.stack, subset=NULL, stack=FALSE)
 }
  
 \arguments{
   \item{env.stack}{A RasterStack object}
+  \item{subset}{string vector, New in version 0.2. using a subset of env.stack to create vritual speices. NULL means using all env.stack}
+  \item{stack}{logical, New in version 0.2. if you want return a RasterStack object rather than combine them together?}
 }
 
 \value{
@@ -29,8 +31,6 @@ Howl Anderson
 \examples{
 # load the sdmvspecies library
 library("sdmvspecies")
-# load parrllel to use mutilcore CPU
-library("parallel")
 # find package's location
 package.dir <- system.file(package="sdmvspecies")
 # let see where is our sdmvspecies is installed in
