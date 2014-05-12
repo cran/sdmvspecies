@@ -1,4 +1,4 @@
-082ef84a212e73c8000e57ded62b25e6 *DESCRIPTION
+80b1db0952fd3c454beb9aa894d30349 *DESCRIPTION
 8b5c2f3e4f75249d85edaea98f7e0489 *NAMESPACE
 8812de55571c8f9d5d45b9e3b90f14c5 *R/artificial_bell_response.R
 5d831531b877e5ebe30fad2b50e395b9 *R/niche_limitation.R
@@ -8,8 +8,8 @@ ded5e1594d7d3a871c2bffa0f93b8b4a *R/pick_mean.R
 89bbd6b8bb49bc113ef11d5aa1fe12c5 *build/vignette.rds
 dd0324028ac216c36896e486b1a9311f *inst/doc/bibliography.bib
 21bfd77c9981aeec6fc2d7aa2e07fb35 *inst/doc/sdmvspecies.R
-af0f3c11af43cfb47afedf02f6cb0c07 *inst/doc/sdmvspecies.Rnw
-d11d7ea1f9eaf6e66b48c1849f5bb4f5 *inst/doc/sdmvspecies.pdf
+ad4964eaff979cbceaeda45c135c533f *inst/doc/sdmvspecies.Rnw
+147177b789936a77e32a05b1c7e542ad *inst/doc/sdmvspecies.pdf
 d6dd3289e593895fa345e0656c8e158c *inst/external/env/bio1.bil
 84c2bdd829dee99ca7791e6b165cf5d8 *inst/external/env/bio1.bil.aux.xml
 aaeab97bef8f0c5deb6f015399f35bd7 *inst/external/env/bio1.bil.ovr
@@ -73,4 +73,4 @@ b58682bdcb1d198759f32e0c8d0ce8e9 *man/pick_mean.Rd
 5ae557bf67d2abd3703ca28f03d44f6c *man/pick_median.Rd
 0a909380aa0a35a0dbcd5f908010f342 *man/sdmvspecies-package.Rd
 dd0324028ac216c36896e486b1a9311f *vignettes/bibliography.bib
-af0f3c11af43cfb47afedf02f6cb0c07 *vignettes/sdmvspecies.Rnw
+ad4964eaff979cbceaeda45c135c533f *vignettes/sdmvspecies.Rnw
