@@ -55,7 +55,74 @@
     return(factor)
 }
 
-nicheSynthese <- function(env.stack, config, stack=FALSE) {
+
+#' nicheSynthese
+#' 
+#' niche synthese method
+#' 
+#' This method mainly implement niche synthese method, for more details see references
+#' 
+#' You can write several paragraphs.
+#' @param env.stack a \code{rasterStack} object that contain the environment variable
+#' @param config config is a \code{list} or \code{matrix} or \code{data.frame} that contain config info, details see details part
+#' @param stack stack is an option that if you want not compose them togethor (result return as a \code{rasterStack}). Default is FALSE
+#' @param random.error add random error on cell or not. Default is FALSE
+#' @return \code{rasterLayer} or \code{rasterStack} if stack is set to TRUE
+#' @references Hirzel, A. H., Helfer, V., & Metral, F. (2001). Assessing habitat-suitability models with a virtual species. Ecological modelling, 145(2), 111-121.
+#' @encoding utf-8
+#' @importFrom parallel mclapply
+#' @importFrom raster cellStats
+#' @export
+#' @examples
+#' # load the sdmvspecies library
+#' library("sdmvspecies")
+#' library("raster")
+#' # find package's location
+#' package.dir <- system.file(package="sdmvspecies")
+#' # let see where is our sdmvspecies is installed in
+#' package.dir
+#' # find env dir under the package's location
+#' env.dir <- paste(package.dir, "/external/env/", sep="")
+#' # let see env dir
+#' env.dir
+#' # get the environment raster file
+#' env.files <- list.files(env.dir, pattern="*.bil$", full.names=TRUE)
+#' # see the file list
+#' env.files
+#' # put the environment file in a raster stack, 
+#' # which require all the environment should have same resolution and extend
+#' env.stack <- stack(env.files)
+#' # let see the env.stack var
+#' env.stack
+#' # here let's configure the environment response function and weight
+#' config <- list(
+#'     c("bio1","1",2), 
+#'     c("bio14", "2", 2), 
+#'     c("bio5", "3", 1), 
+#'     c("bio11", "4", 2), 
+#'     c("bio16", "5", 1)
+#' )
+#' # call the niche synthsis method
+#' species.raster <- nicheSynthese(env.stack, config)
+#' # let see the result raster,
+#' # you should noticed that it's continue value map not distributin map
+#' species.raster
+#' 
+#' # write the map to file, so you can use it latter in GIS software
+#' # or further analysis.
+#' # 
+#' #writeRaster(species.raster, "synthese.img", "HFA", overwrite=TRUE)
+#' 
+#' # to make binary distribution map, you should chosee a threshold to make map
+#' # see the map then to decide the threshold to binary
+#' plot(species.raster)
+#' # choice threshold, here we choice 4
+#' threshold <- 14
+#' # make binary map
+#' distribution.map <- species.raster > threshold
+#' # plot the map out
+#' plot(distribution.map)
+nicheSynthese <- function(env.stack, config, stack=FALSE, random.error=FALSE) {
     RESPONSE_METHOD = seq(1,5)
     
     # check env.stack first
@@ -78,6 +145,17 @@ nicheSynthese <- function(env.stack, config, stack=FALSE) {
     species.matrix <- matrix(unlist(species.list), ncol=length(config), byrow=FALSE)
     if (!stack) {
         species <- apply(species.matrix, 1, sum)
+        # calcuate weight
+        weight.list <- lapply(X=config, FUN=function(config.item) {return(config.item[3])})
+        weight.value <- sum(as.integer(unlist(weight.list)))
+        species <- species/weight.value
+        # add random error term on condition
+        if (random.error) {
+            cell.number <- length(species)
+            random.error <- runif(cell.number, -0.05, 0.05)
+            species <- species + random.error
+        }
+        
         species.layer <- env.stack[[config[[1]][1]]]
         species.raster <- setValues(species.layer, as.vector(species))
         return(species.raster)
@@ -126,10 +204,3 @@ nicheSynthese <- function(env.stack, config, stack=FALSE) {
     result <- result*weight
     return(result)
 }
-
-
-# files <- list.files(path="../../test/env/", pattern="*.bil$", full.names=TRUE)
-# env.stack <- stack(files)
-# config <- list(c("bio1","1",1), c("bio2", "2", 2), c("bio3", "4", 1), c("bio4", "4", 1), c("bio5", "5", 2))
-# species.raster <- nicheSynthese(env.stack, config)
-# species.raster <- nicheSynthese(env.stack, config, stack=TRUE)

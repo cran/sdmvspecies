@@ -1,6 +1,41 @@
 #!/usr/bin/env Rscript
 
 
+#' pickMedian
+#' 
+#' pick median method
+#' 
+#' This method mainly implement pick median method
+#' 
+#' @param env.stack a \code{rasterStack} object that contain the environment variable
+#' @param subset subset is a string \code{vector} that contain environment variables names which into calculate, if NULL that all var in env.stack will calculate. 
+#' @param stack stack is an option that if you want not compose them togethor (result return as a \code{rasterStack}). Default is FALSE
+#' @return \code{rasterLayer} or \code{rasterStack} if stack is set to TRUE
+#' @references Lobo, J. M., & Tognelli, M. F. (2011). Exploring the effects of quantity and location of pseudo-absences and sampling biases on the performance of distribution models with limited point occurrence data. Journal for Nature Conservation, 19(1), 1-7.
+#' @encoding utf-8
+#' @importFrom raster as.vector
+#' @importFrom raster stackApply
+#' @export
+#' @examples
+#' # load the sdmvspecies library
+#' library("sdmvspecies")
+#' library("raster")
+#' # find package's location
+#' package.dir <- system.file(package="sdmvspecies")
+#' # let see where is our sdmvspecies is installed in
+#' package.dir
+#' # find env dir under the package's location
+#' env.dir <- paste(package.dir, "/external/env/", sep="")
+#' # let see env dir
+#' env.dir
+#' # get the environment raster file
+#' files <- list.files(path=env.dir, pattern="*.bil$", full.names=TRUE)
+#' # make raster stack
+#' env.stack <- stack(files)
+#' # run pick mean
+#' species.raster <- pickMedian(env.stack)
+#' # plot map
+#' plot(species.raster)
 pickMedian <- function(env.stack, subset=NULL, stack=FALSE) {
     if (!(class(env.stack) %in% "RasterStack")) {
         stop("env.stack is not a RasterStack object!")
@@ -46,9 +81,3 @@ pickMedian <- function(env.stack, subset=NULL, stack=FALSE) {
     result.layer <- ((env.layer >= env.quantile[2]) & (env.layer <= env.quantile[4]))
     return(result.layer)
 }
-
-# files <- list.files(path="../../test/env/", pattern="*.bil$", full.names=TRUE)
-# subset <- c("bio1", "bio12", "bio7", "bio5")
-# env.stack <- stack(files)
-# species.raster <- pickMedian(env.stack, subset=subset)
-# species.raster <- pickMedian(env.stack, subset=subset, stack=TRUE)

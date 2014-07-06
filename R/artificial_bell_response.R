@@ -1,20 +1,65 @@
 #!/usr/bin/env Rscript
 
-
-.artificialGaussianTranslate <- function(factor, normal.mean, normal.sd) {
+.artificialGaussianTranslate <- function(factor, normal.mean, normal.sd, rescale) {
     result <- dnorm(factor, normal.mean, normal.sd) 
-    result <- sqrt(2*pi)*normal.sd*result
+    if (rescale) {
+        result <- sqrt(2*pi)*normal.sd*result
+    }
     return(result)
 }
 
-
-artificialBellResponse <- function(env.stack, config, stack=FALSE, compose="product") {
+#' artificialBellResponse
+#' 
+#' artificial bell response method
+#' 
+#' This method mainly implement artificial bell response method, more detail see references.
+#' 
+#' @param env.stack a \code{rasterStack} object that contain the environment variable
+#' @param config config is a \code{list} or \code{matrix} or \code{data.frame} that contain config info, details see details part
+#' @param stack stack is an option that if you want not compose them togethor (result return as a \code{rasterStack}). Default is FALSE
+#' @param compose the method compose the suitability together. Default is product
+#' @param rescale if \code{TRUE} each environment will rescale before compose together
+#' @return \code{rasterLayer} or \code{rasterStack} if stack is set to TRUE
+#' @references Varela, S., Anderson, R. P., García-Valdés, R., & Fernández-González, F. (2014). Environmental filters reduce the effects of sampling bias and improve predictions of ecological niche models. Ecography.
+#' @encoding utf-8
+#' @importFrom raster stack
+#' @importFrom raster setValues
+#' @importFrom raster getValues
+#' @export
+#' @examples
+#' # load the sdmvspecies library
+#' library("sdmvspecies")
+#' library("raster")
+#' # find package's location
+#' package.dir <- system.file(package="sdmvspecies")
+#' # let see where is our sdmvspecies is installed in
+#' package.dir
+#' # find env dir under the package's location
+#' env.dir <- paste(package.dir, "/external/env/", sep="")
+#' # let see env dir
+#' env.dir
+#' # get the environment raster file
+#' file.name <- files <- c("bio1.bil", "bio12.bil", "bio7.bil", "bio5.bil")
+#' files <- paste(env.dir, file.name, sep="")
+#' # make raster stack
+#' env.stack <- stack(files)
+#' # config
+#' config <- list(c("bio1",150, 50), c("bio12", 2000, 500), c("bio7", 400, 100), c("bio5", 300, 100))
+#' # run pick mean
+#' species.raster <- artificialBellResponse(env.stack, config)
+#' # plot map
+#' plot(species.raster)
+#' # species distribution map
+#' species.distribution.raster <- species.raster > 0.2
+#' # plot map
+#' plot(species.distribution.raster)
+artificialBellResponse <- function(env.stack, config, stack=FALSE, compose="product", rescale=TRUE) {
     # check env.stack first
     if (!(class(env.stack) %in% "RasterStack")) {
         stop("env.stack is not a RasterStack object!")
     }
     # TODO:here used mclapply but not given core.number
-    species.list <- mclapply(X=config, FUN=.artificialBellResponseMain, env.stack)
+    species.list <- lapply(X=config, FUN=.artificialBellResponseMain, env.stack, rescale)
 
     species.matrix <- matrix(unlist(species.list), ncol=length(config), byrow=FALSE)
     if (!stack) {
@@ -41,8 +86,7 @@ artificialBellResponse <- function(env.stack, config, stack=FALSE, compose="prod
     }
 }
 
-
-.artificialBellResponseMain <- function(var, env.stack) {
+.artificialBellResponseMain <- function(var, env.stack, rescale) {
     predictor.name <- var[1]
     normal.mean <- var[2]
     normal.mean <- as.integer(normal.mean)
@@ -53,14 +97,6 @@ artificialBellResponse <- function(env.stack, config, stack=FALSE, compose="prod
 
     factor <- getValues(env.layer)
 
-    result <- .artificialGaussianTranslate(factor, normal.mean, normal.sd)
+    result <- .artificialGaussianTranslate(factor, normal.mean, normal.sd, rescale)
     return(result)
 }
-
-# files <- list.files(path="../../test/env", pattern="*.bil$", full.names=TRUE)
-# env.stack <- stack(files)
-# config <- list(c("bio1",100, 200), c("bio12", 2800, 1500), c("bio7", 200, 300), c("bio5", 300, 100))
-# #config <- list(c("bio1",1, 300), c("bio14", 100, 160), c("bio5", 200, 200), c("bio11", 50, 190), c("bio16", 500, 100))
-# species.raster <- artificialBellResponse(env.stack, config, compose="sum")
-# species.raster.pro <- artificialBellResponse(env.stack, config, compose="product")
-# species.raster.stack <- artificialBellResponse(env.stack, config, stack=TRUE)
