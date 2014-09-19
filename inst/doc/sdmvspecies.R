@@ -129,7 +129,7 @@ theme_bw() +
       panel.grid.major=element_blank(),
       panel.grid.minor=element_blank(),
       plot.background=element_blank()) +
-layer(geom='line', data=plot.data, mapping=aes(x=environment, y =suitability)) + 
+layer(geom='line', data=plot.data, mapping=aes(x=environment, y =suitability)) +
 layer(geom='line', data=plot.data2, mapping=aes(x=environment, y =suitability)) +
 layer(geom='segment', mapping=aes(x = 0, y = 0, xend=25, yend=0), arrow = arrow(length = unit(0.5, "cm"))) +
 layer(geom='segment', mapping=aes(x = 0, y = 0, xend=0, yend=1), arrow = arrow(length = unit(0.5, "cm")))
@@ -161,7 +161,7 @@ theme_bw() +
       panel.grid.major=element_blank(),
       panel.grid.minor=element_blank(),
       plot.background=element_blank()) +
-layer(geom='line', data=plot.data, mapping=aes(x=environment, y =suitability)) + 
+layer(geom='line', data=plot.data, mapping=aes(x=environment, y =suitability)) +
 layer(geom='line', data=plot.data2, mapping=aes(x=environment, y =suitability)) +
 layer(geom='segment', mapping=aes(x = -3, y = 0, xend=20, yend=0), arrow = arrow(length = unit(0.5, "cm"))) +
 layer(geom='segment', mapping=aes(x = -3, y = 0, xend=-3, yend=1), arrow = arrow(length = unit(0.5, "cm")))
@@ -171,10 +171,10 @@ layer(geom='segment', mapping=aes(x = -3, y = 0, xend=-3, yend=1), arrow = arrow
 ### code chunk number 8: comment configure code
 ###################################################
 config <- list(
-    c("bio1","1",2), 
-    c("bio14", "2", 2), 
-    c("bio5", "3", 1), 
-    c("bio11", "4", 2), 
+    c("bio1","1",2),
+    c("bio14", "2", 2),
+    c("bio5", "3", 1),
+    c("bio11", "4", 2),
     c("bio16", "5", 1)
     )
 
