@@ -2,19 +2,17 @@
 
 
 #' pickMedian
-#' 
+#'
 #' pick median method
-#' 
+#'
 #' This method mainly implement pick median method
-#' 
+#'
 #' @param env.stack a \code{rasterStack} object that contain the environment variable
-#' @param subset subset is a string \code{vector} that contain environment variables names which into calculate, if NULL that all var in env.stack will calculate. 
+#' @param subset subset is a string \code{vector} that contain environment variables names which into calculate, if NULL that all var in env.stack will calculate.
 #' @param stack stack is an option that if you want not compose them togethor (result return as a \code{rasterStack}). Default is FALSE
 #' @return \code{rasterLayer} or \code{rasterStack} if stack is set to TRUE
 #' @references Lobo, J. M., & Tognelli, M. F. (2011). Exploring the effects of quantity and location of pseudo-absences and sampling biases on the performance of distribution models with limited point occurrence data. Journal for Nature Conservation, 19(1), 1-7.
 #' @encoding utf-8
-#' @importFrom raster as.vector
-#' @importFrom raster stackApply
 #' @export
 #' @examples
 #' # load the sdmvspecies library
@@ -41,7 +39,7 @@ pickMedian <- function(env.stack, subset=NULL, stack=FALSE) {
         stop("env.stack is not a RasterStack object!")
     }
     env.names <- unlist(names(env.stack))
-    
+
     if (length(subset)) {
         check.result <- subset %in% env.names
         if (!all(check.result)) {
@@ -54,7 +52,7 @@ pickMedian <- function(env.stack, subset=NULL, stack=FALSE) {
 
     # TODO:here used mclapply but not given core.number
     species.list <- mclapply(X=env.names, FUN=.pickMedian, env.stack)
-    
+
     if (!stack) {
         species.stack <- stack(species.list)
         species.layer <- stackApply(species.stack, c(1), sum, na.rm=FALSE)
@@ -66,7 +64,8 @@ pickMedian <- function(env.stack, subset=NULL, stack=FALSE) {
         col.number <- length(species.list)
         species.stack <- stack()
         for (col.index in 1:col.number) {
-            species.raster <- setValues(species.layer, as.vector(species.list[[col.index]]))
+            # species.raster <- setValues(species.layer, as.vector(species.list[[col.index]]))
+            species.raster <- setValues(species.layer, getValues(species.list[[col.index]]))
             species.stack <- stack(species.stack, species.raster)
         }
         names(species.stack) <- env.names

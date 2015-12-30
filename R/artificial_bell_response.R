@@ -1,19 +1,19 @@
 #!/usr/bin/env Rscript
 
 .artificialGaussianTranslate <- function(factor, normal.mean, normal.sd, rescale) {
-    result <- dnorm(factor, normal.mean, normal.sd) 
+    result <- dnorm(factor, normal.mean, normal.sd)
     if (rescale) {
-        result <- sqrt(2*pi)*normal.sd*result
+        result <- sqrt(2 * pi) * normal.sd * result
     }
     return(result)
 }
 
 #' artificialBellResponse
-#' 
+#'
 #' artificial bell response method
-#' 
+#'
 #' This method mainly implement artificial bell response method, more detail see references.
-#' 
+#'
 #' @param env.stack a \code{rasterStack} object that contain the environment variable
 #' @param config config is a \code{list} or \code{matrix} or \code{data.frame} that contain config info, details see details part
 #' @param stack stack is an option that if you want not compose them togethor (result return as a \code{rasterStack}). Default is FALSE
@@ -22,9 +22,6 @@
 #' @return \code{rasterLayer} or \code{rasterStack} if stack is set to TRUE
 #' @references Varela, S., Anderson, R. P., García-Valdés, R., & Fernández-González, F. (2014). Environmental filters reduce the effects of sampling bias and improve predictions of ecological niche models. Ecography.
 #' @encoding utf-8
-#' @importFrom raster stack
-#' @importFrom raster setValues
-#' @importFrom raster getValues
 #' @export
 #' @examples
 #' # load the sdmvspecies library
@@ -55,14 +52,14 @@
 #' plot(species.distribution.raster)
 artificialBellResponse <- function(env.stack, config, stack=FALSE, compose="product", rescale=TRUE) {
     # check env.stack first
-    if (!(class(env.stack) %in% "RasterStack")) {
+    if (! (class(env.stack) %in% "RasterStack")) {
         stop("env.stack is not a RasterStack object!")
     }
     # TODO:here used mclapply but not given core.number
     species.list <- lapply(X=config, FUN=.artificialBellResponseMain, env.stack, rescale)
 
     species.matrix <- matrix(unlist(species.list), ncol=length(config), byrow=FALSE)
-    if (!stack) {
+    if (! stack) {
         if (compose == "product") {
             species <- apply(species.matrix, 1, prod)
         } else if (compose == "sum") {
